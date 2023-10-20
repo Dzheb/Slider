@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      svg:hover path {
+        fill: rgb(210, 37, 25);
+      }
+      .slider {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .image {
+        width: 30vw;
+        height: 50vh;
+        margin: 16px;
+        border-radius: 16px;
+        display: none;
+      }
+      .active {
+        display: block;
+      }
+      .activetoggle {
+        color: rgb(235, 40, 22);
+      }
+      .btn {
+        margin: 0 20px;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+
+      .toggles {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+      }
+      .toggle {
+        cursor: pointer;
+        font-size: 72px;
+      }
+      .toggle:hover {
+        color: rgb(145, 169, 189);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slider">
+      <svg
+        class="btn previous"
+        width="13"
+        height="23"
+        viewBox="0 0 13 23"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M12.6998 3.7499L4.9498 11.4999L12.6998 19.2499L11.1498 22.3499L0.299805 11.4999L11.1498 0.649902L12.6998 3.7499Z"
+          fill="black"
+        />
+      </svg>
+      <img
+        class="image active"
+        src="https://mykaleidoscope.ru/x/uploads/posts/2022-09/1663111515_11-mykaleidoscope-ru-p-moskva-siti-rossiya-dostoprimechatelnosti-11.jpg"
+        alt="image1"
+      />
+      <img
+        class="image"
+        src="https://scx2.b-cdn.net/gfx/news/hires/2022/city-street-1.jpg"
+        alt="image2"
+      />
+      <img
+        class="image"
+        src="https://i.pinimg.com/736x/57/fc/80/57fc80d13398740550aae89efaf82c53.jpg"
+        alt="image3"
+      />
+      <svg
+        class="btn next"
+        width="13"
+        height="23"
+        viewBox="0 0 13 23"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M0.299805 19.2499L8.0498 11.4999L0.299805 3.7499L1.8498 0.649902L12.6998 11.4999L1.8498 22.3499L0.299805 19.2499Z"
+          fill="black"
+        />
+      </svg>
+    </div>
+    <div class="toggles">
+      <div class="toggle activetoggle">.</div>
+      <div class="toggle">.</div>
+      <div class="toggle">.</div>
+    </div>
+    <script>
+      const images = document.querySelectorAll('.image');
+      const imgArray = new Array(images);
+      const toggles = document.querySelectorAll('.toggle');
+      const toggleArray = new Array(toggles);
+      // нумерация тогглов
+      for (let i = 0; i < toggleArray[0].length; i++) {
+        toggleArray[0][i].setAttribute('data-num', i);
+      }
+      const nextBtn = document.querySelector('.next');
+      const previousBtn = document.querySelector('.previous');
+      // нажатие кнопки (доп)
+      const click = new Event('click');
+      setInterval(() => {
+        nextBtn.dispatchEvent(click);
+      }, 3000);
+      nextBtn.addEventListener('click', function (e) {
+        for (let i = 0; i < imgArray[0].length; i++) {
+          if (imgArray[0][i].classList.contains('active')) {
+            imgArray[0][i].classList.remove('active');
+            toggleArray[0][i].classList.remove('activetoggle');
+            imgArray[0][(i + 1) % imgArray[0].length].classList.add('active');
+            toggleArray[0][(i + 1) % imgArray[0].length].classList.add(
+              'activetoggle'
+            );
+            break;
+          }
+        }
+      });
+      previousBtn.addEventListener('click', function (e) {
+        for (let i = imgArray[0].length - 1; i >= 0; i--) {
+          if (imgArray[0][i].classList.contains('active')) {
+            imgArray[0][i].classList.remove('active');
+            toggleArray[0][i].classList.remove('activetoggle');
+            if (i === 0) {
+              i = imgArray[0].length;
+            }
+            imgArray[0][Math.abs(i - 1)].classList.add('active');
+            toggleArray[0][Math.abs(i - 1)].classList.add('activetoggle');
+            break;
+          }
+        }
+      });
+      // установка слушателя на каждый тоггл
+      for (let i = 0; i < toggleArray[0].length; i++) {
+        toggleArray[0][i].addEventListener('click', function (e) {
+          console.log(e.target.getAttribute('data-num'));
+          const clickedEl =
+            imgArray[0][parseInt(e.target.getAttribute('data-num'))];
+          console.log(clickedEl);
+          if (!this.classList.contains('activetoggle')) {
+            toggleArray[0].forEach((element) => {
+              if (element.classList.contains('activetoggle'))
+                element.classList.remove('activetoggle');
+            });
+            this.classList.add('activetoggle');
+            clickedEl.classList.add('active');
+            images.forEach((element) => {
+              if (element.classList.contains('active'))
+                element.classList.remove('active');
+            });
+            clickedEl.classList.add('active');
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
